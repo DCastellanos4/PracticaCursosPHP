@@ -26,28 +26,29 @@
     arsort($noAdmitidos);
     arsort($admitidos);
     $cola = $noAdmitidos + $admitidos;
-    $plazasRestantes = [];
+    //PRECARGAMOS TODAS LAS PLAZAS EN UN ARRAY ASOCIATIVO
+    $resPlazas = $con->query("SELECT codigo, numeroplazas FROM cursos");
+    $plazasDisponibles = [];
+    while ($c = $resPlazas->fetch(PDO::FETCH_ASSOC)) {
+        $plazasDisponibles[$c['codigo']] = $c['numeroplazas'];
+    }
     foreach ($cola as $dni => $puntos) {
         //HACEMOS UNA VUELTA POR CADA SOLICITUD EN LA COLA
-        $query = $con->prepare("SELECT codigocurso,
-            (SELECT numeroplazas FROM cursos WHERE cursos.codigo = solicitudes.codigocurso LIMIT 1) as plazas
-            FROM solicitudes
-            WHERE dni = :dni");
+        $query = $con->prepare("SELECT codigocurso,admitido FROM solicitudes WHERE dni = :dni");
         $query->execute([':dni' => $dni]);
         while ($linea = $query->fetch(PDO::FETCH_ASSOC)) {
             $curso = $linea['codigocurso'];
-            //SI NO EXISTE LA CANTIDAD DE PLAZAS DE UN CURSO LAS REGISTRAMOS EN EL ARRAY ASOCIATIVO DE PLAZAS
-            if (!isset($plazasRestantes[$curso])) {
-                $plazasRestantes[$curso] = $linea['plazas'];
-            }
             //SI EL CURSO TIENE PLAZAS, GUARDAMOS LA SOLICITUD Y HACEMOS EL UPDATE EN LA BASE DE DATOS
-            if ($plazasRestantes[$curso] > 0) {
-                //RESTAMOS UNA PLAZA PARA LA SIGUIENTE VUELTA DEL BUCLE
-                $plazasRestantes[$curso]--;
-                $update = $con->prepare("UPDATE solicitudes set admitido = 1 where dni= :dni");
-                $update2 = $con->prepare("UPDATE cursos set numeroplazas = numeroplazas-1 where codigo = :codigo");
-                $update->execute([":dni" => $dni]);
-                $update2->execute([":codigo" => $curso]);
+            if ($plazasDisponibles[$curso] > 0) {
+                if ($linea['admitido'] == 0) {
+                    //SOLO MODIFICO LAS PLAZAS Y LA ADMISION, SI NO ESTA ADMITIDO
+                    $plazasDisponibles[$curso]--;
+                    $update = $con->prepare("UPDATE solicitudes set admitido = 1 where dni= :dni and codigocurso = :codigocurso");
+                    $update2 = $con->prepare("UPDATE cursos set numeroplazas = numeroplazas-1 where codigo = :codigo");
+                    $update->execute([":dni" => $dni, ":codigocurso" => $curso]);
+                    $update2->execute([":codigo" => $curso]);
+                }
+
             }
         }
     }
