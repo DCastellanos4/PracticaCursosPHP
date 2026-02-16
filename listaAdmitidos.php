@@ -109,7 +109,7 @@
     }
     echo "</tbody></table>";
     ?>
-    <a href="index.php"><button type="button">Inicio</button></a>
+    <a href="panelAdmin.php"><button type="button">Volver</button></a>
 
 </body>
 

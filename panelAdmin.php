@@ -97,7 +97,7 @@ if (!isset($_SESSION['admin'])) {
     <div id="boton">
         <a href="creaCurso.php"><button>Crear Curso</button></a>
         <a href="calculaPuntos.php"><button>Calcular Puntos</button></a>
-        <a href="darPlazas.php"><button>Dar Plazas</button></a>
+        <a href="darPlazas.php"><button>Otorgar Plazas</button></a>
     </div>
     <?php
     require_once "funciones.php";
@@ -118,6 +118,7 @@ if (!isset($_SESSION['admin'])) {
     if ($boton) {
         echo "<th>Estado</th>";
         echo "<th>Eliminar</th>";
+        echo "<th>Admitidos</th>";
     }
     echo "</thead>";
     echo "</tr>";
@@ -134,8 +135,9 @@ if (!isset($_SESSION['admin'])) {
         echo "<td>" . htmlspecialchars($fila['plazoinscripcion']) . "</td>";
         if ($boton) {
             echo "<td><a href='activar.php?id={$fila['codigo']}'><button>Activar/Desactivar</button></a></td>";
-            echo "<td><a href='eliminar.php?id={$fila['codigo']}'><button>Eliminar</button></a></td>";
+            echo "<td><a href='eliminar.php?id={$fila['codigo']}'><button style='background-color: red;'>Eliminar</button></a></td>";
         }
+        echo "<td><a href='listaAdmitidos.php?id={$fila['codigo']}'><button style='background-color: green;'>Admitidos</button></a></td>";
         echo "</tr>";
     }
     echo "</tbody></table>";

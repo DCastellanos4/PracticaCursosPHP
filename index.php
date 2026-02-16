@@ -120,7 +120,6 @@ if (isset($_SESSION['user'])) {
     if ($boton) {
         echo "<th>Acción</th>";
     }
-    echo "<th>Admitidos</th>";
     echo "</thead>";
     echo "</tr>";
     echo "<tbody>";
@@ -137,7 +136,6 @@ if (isset($_SESSION['user'])) {
             if ($boton) {
                 echo "<td><a href='gestionInscribir.php?id={$fila['codigo']}'><button>Inscribirme</button></a></td>";
             }
-            echo "<td><a href='listaAdmitidos.php?id={$fila['codigo']}'><button class='admitidos'>Admitidos</button></a></td>";
             echo "</tr>";
         }
     }
