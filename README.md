@@ -1,3 +1,4 @@
+![CI Status](https://github.com/DCastellanos4/PracticaCursosPHP/actions/workflows/main.yml/badge.svg)
 # Proyecto de Gestión de Cursos - Práctica PHP
 
 Este repositorio contiene una aplicación web desarrollada en PHP para la gestión de cursos, usuarios e inscripciones. Es un proyecto de práctica diseñado para implementar conceptos de programación del lado del servidor, manejo de bases de datos y validaciones de formularios.
